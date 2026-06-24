@@ -1,4 +1,3 @@
-<?php
 // Включаем отображение всех ошибок PHP для отладки
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -15,26 +14,7 @@ $headers = getallheaders();
 foreach ($headers as $key => $value) {
     $debug_info .= "Header $key: $value\n";
 }
-file_put_contents('request.log', $debug_info, FILE_APPEND);
-
-// Проверяем действие
-$action = isset($_GET['action']) ? $_GET['action'] : 'balance';
-$token = isset($headers['X-Token']) ? $headers['X-Token'] : (isset($headers['x-token']) ? $headers['x-token'] : null);
-
-// Фейковый браузер, чтобы Monobank и хостинг не блокировали нас
-$userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-
-// --- ОТЛАДОЧНЫЙ ТЕСТ (Проверка связи телефона с прокси) ---
-if ($action === 'test') {
-    echo "ПРОКСИ РАБОТАЕТ!\n";
-    echo "Твой IP: " . $_SERVER['REMOTE_ADDR'] . "\n";
-    echo "Токен получен: " . ($token ? "ДА (длина: " . strlen($token) . ")" : "НЕТ") . "\n";
-    exit;
-}
-
-// --- 1. КУРСЫ ВАЛЮТ (Без токена) ---
-if ($action === 'currency') {
-    $ch = curl_init();
+file_put_contents('    $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://api.monobank.ua/bank/currency');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
